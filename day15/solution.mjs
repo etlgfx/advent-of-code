@@ -1,3 +1,4 @@
+/*
 const input = `
 1163751742
 1381373672
@@ -10,18 +11,20 @@ const input = `
 1293138521
 2311944581
 `;
+*/
 
-//import { input } from "./input.mjs";
+import { input } from "./input.mjs";
 
-function calcCost(matrix, cost, pos) {
+function calcCost(matrix, cost, pos, end) {
     let next = [];
+    let done = false;
 
     pos.forEach((p) => {
         [
             [0, 1],
             [1, 0],
-            [-1, 0],
-            [0, -1],
+            //[-1, 0],
+            //[0, -1],
         ].forEach((offset) => {
             let x = p[0] + offset[0];
             let y = p[1] + offset[1];
@@ -42,7 +45,13 @@ function calcCost(matrix, cost, pos) {
         if (t !== undefined && (cost[x][y] === undefined || t < cost[x][y])) {
             cost[x][y] = t;
         }
+
+        if (end[0] == x && end[1] == y) {
+            done = true;
+        }
     });
+
+    if (done) return;
 
     calcCost(
         matrix,
@@ -61,7 +70,8 @@ function calcCost(matrix, cost, pos) {
                     return acc;
                 },
                 { pairs: [], hash: {} }
-            ).pairs
+            ).pairs,
+        end
     );
 }
 
@@ -70,10 +80,11 @@ function a(input) {
         .trim()
         .split(/\n/)
         .map((row) => row.split("").map(Number));
+
     console.log(matrix);
 
     let pos = [0, 0];
-    let end = [matrix.length][matrix[0].length];
+    let end = [matrix.length - 1, matrix[0].length - 1];
 
     let cost = Array(matrix.length)
         .fill()
@@ -81,13 +92,9 @@ function a(input) {
 
     cost[0][0] = 0;
 
-    calcCost(matrix, cost, [pos]);
+    calcCost(matrix, cost, [pos], end);
 
-    /*
-    while (pos[0] != end[0] && pos[1] != end[1]) {
-
-    }
-    */
+    console.log(cost);
 }
 
 a(input);
