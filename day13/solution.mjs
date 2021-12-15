@@ -1,4 +1,4 @@
-import {input} from './input.mjs';
+import { input } from "./input.mjs";
 
 /*
 const input = `
@@ -31,20 +31,19 @@ function a(input) {
     let folds = [];
 
     let pop;
-    while (pop = coords.pop()) {
+    while ((pop = coords.pop())) {
         folds.unshift(pop);
     }
 
-    coords = coords.map(c => c.split(',').map(Number));
-    folds = folds.map(f => {
+    coords = coords.map((c) => c.split(",").map(Number));
+    folds = folds.map((f) => {
         let matches = f.match(/([xy])=(\d+)/);
 
         if (matches) {
-            if (matches[1] === 'x') {
-                return [Number(matches[2]),];
-            }
-            else {
-                return [,Number(matches[2])];
+            if (matches[1] === "x") {
+                return [Number(matches[2])];
+            } else {
+                return [, Number(matches[2])];
             }
         }
     });
@@ -52,7 +51,7 @@ function a(input) {
     //console.log(coords, folds);
     //console.log(displayCoords(coords));
 
-    folds.forEach(f => {
+    folds.forEach((f) => {
         coords = fold(coords, f[0], f[1]);
         //console.log(coords);
         //console.log(countCoords(coords));
@@ -62,21 +61,23 @@ function a(input) {
 }
 
 function displayCoords(coords) {
-    let matrix = Array(80).fill([]).map(r => {
-        return Array(80).fill('.');
+    let matrix = Array(80)
+        .fill([])
+        .map((r) => {
+            return Array(80).fill(".");
+        });
+
+    coords.forEach((c) => {
+        matrix[c[1]][c[0]] = "#";
     });
 
-    coords.forEach(c => {
-        matrix[c[1]][c[0]] = '#';
-    });
-
-    return matrix.map(r => r.join('')).join('\n') + '\n';
+    return matrix.map((r) => r.join("")).join("\n") + "\n";
 }
 
 function countCoords(coords) {
     let hash = {};
-    coords.forEach(c => {
-        let key = c[0] +':'+ c[1];
+    coords.forEach((c) => {
+        let key = c[0] + ":" + c[1];
         hash[key] = (hash[key] ?? 0) + 1;
     });
 
@@ -84,13 +85,12 @@ function countCoords(coords) {
 }
 
 function fold(coords, fx, fy) {
-    return coords.map(c => {
+    return coords.map((c) => {
         if (fx) {
             if (fx < c[0]) {
                 return [fx - (c[0] - fx), c[1]];
             }
-        }
-        else {
+        } else {
             if (fy < c[1]) {
                 return [c[0], fy - (c[1] - fy)];
             }
