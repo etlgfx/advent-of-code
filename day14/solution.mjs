@@ -21,7 +21,7 @@ CN -> C
 `;
 */
 
-import {input} from './input.mjs';
+import { input } from "./input.mjs";
 
 function a(input) {
     let lines = input.trim().split(/\n/);
@@ -35,34 +35,35 @@ function a(input) {
     let inserts = [];
 
     lines.forEach((line) => {
-        let [pair, c] = line.split(' -> ');
+        let [pair, c] = line.split(" -> ");
         inserts.push([pair, c]);
     });
 
     console.log(inserts);
-
 
     for (let i = 0; i < 3; i++) {
         let positions = [];
 
         for (let j = 0; j < code.length - 1; j++) {
             let codepair = code.substring(j, j + 2);
-            positions[j] = inserts.filter(([pair, ]) => pair === codepair).map(([, c]) => c)[0];
+            positions[j] = inserts
+                .filter(([pair]) => pair === codepair)
+                .map(([, c]) => c)[0];
         }
 
         //console.log(positions);
 
-        code = code.split('');
+        code = code.split("");
         positions.forEach((c, ix) => {
             //console.log(code, c, ix);
             code.splice(ix * 2 + 1, 0, c);
-        })
-        code = code.join('');
+        });
+        code = code.join("");
 
         //console.log(code);
     }
 
-    let counts = code.split('').reduce((acc, cur) => {
+    let counts = code.split("").reduce((acc, cur) => {
         acc[cur] = (acc[cur] ?? 0) + 1;
         return acc;
     }, {});
@@ -84,7 +85,7 @@ function b(input) {
     let inserts = [];
 
     lines.forEach((line) => {
-        let [pair, c] = line.split(' -> ');
+        let [pair, c] = line.split(" -> ");
         inserts.push([pair, c]);
     });
 
@@ -98,24 +99,25 @@ function b(input) {
     }
 
     let lets = {};
-    code.split('').forEach(c => lets[c] = (lets[c] ?? 0) + 1);
+    code.split("").forEach((c) => (lets[c] = (lets[c] ?? 0) + 1));
 
     let repl = {};
-    inserts.map(([pair, ins]) => [pair, pair[0] + ins, ins + pair[1]]).forEach(r => repl[r[0]] = r.slice(1));
+    inserts
+        .map(([pair, ins]) => [pair, pair[0] + ins, ins + pair[1]])
+        .forEach((r) => (repl[r[0]] = r.slice(1)));
 
     console.log(repl);
 
-    Object.keys(repl).forEach(r => {
-        pairs[r] = (pairs[r] ?? 0);
+    Object.keys(repl).forEach((r) => {
+        pairs[r] = pairs[r] ?? 0;
     });
-
 
     for (let i = 0; i < 40; i++) {
         //console.log(pairs);
 
         let mods = {};
 
-        Object.keys(pairs).forEach(k => {
+        Object.keys(pairs).forEach((k) => {
             let newlet = repl[k][0][1];
             lets[newlet] = (lets[newlet] ?? 0) + pairs[k];
 
@@ -129,9 +131,10 @@ function b(input) {
         });
     }
 
-
-    let res = Object.entries(pairs)
-        .flatMap(p => [[p[0][0], p[1]], [p[0][1], p[1]]]);
+    let res = Object.entries(pairs).flatMap((p) => [
+        [p[0][0], p[1]],
+        [p[0][1], p[1]],
+    ]);
 
     let counts = res.reduce((acc, cur) => {
         acc[cur[0]] = (acc[cur[0]] ?? 0) + cur[1];
@@ -140,7 +143,6 @@ function b(input) {
 
     console.log(res);
     console.log(counts);
-
 
     let tot = Object.entries(counts).sort((a, b) => a[1] - b[1]);
 
