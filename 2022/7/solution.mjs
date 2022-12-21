@@ -1,10 +1,10 @@
 import { open } from 'node:fs/promises';
 
-//const file = await open('./input.txt');
+const file = await open('./input.txt');
 
-//const input = await file.readFile({ encoding: 'utf8' });
+const input = await file.readFile({ encoding: 'utf8' });
 
-//await file.close();
+await file.close();
 
 const parse = (input) => {
     return input.trim().split('\n');
@@ -67,8 +67,7 @@ const parseTree = (input) => {
 };
 
 const weightTree = (tree) => {
-    if (!tree.children.length)
-        return tree.size;
+    if (!tree.children.length) return tree.size;
 
     tree.size = tree.children.reduce(
         (acc, child) => acc + weightTree(child),
@@ -79,12 +78,13 @@ const weightTree = (tree) => {
 };
 
 const treeToList = (tree, list) => {
-
-    tree.children.forEach(node => {
-        if (node.children.length) {
-            list.concat(treeToList(tree, []));
-        }
+    tree.children.forEach((node) => {
+        list = list.concat(treeToList(node, []));
     });
+
+    if (tree.children.length) {
+        list = list.concat([{ size: tree.size, name: tree.name }]);
+    }
 
     return list;
 };
@@ -92,15 +92,34 @@ const treeToList = (tree, list) => {
 const solution1 = (input) => {
     const tree = parseTree(input);
 
-    console.dir(tree, {depth: 10})
+    weightTree(tree);
+
+    return treeToList(tree, [])
+        .sort((a, b) => a.size - b.size)
+        .filter((n) => n.size < 100000)
+        .reduce((acc, n) => acc + n.size, 0);
+};
+
+const fs = 70000000;
+const unused = 30000000;
+const maxTotal = fs - unused;
+
+const solution2 = (input) => {
+    const tree = parseTree(input);
 
     weightTree(tree);
 
-    console.dir(tree, {depth: 10})
+    //console.log('total', tree.size);
 
-    treeToList(tree, []);
+    const total = tree.size;
+
+    return treeToList(tree, [])
+        .sort((a, b) => a.size - b.size)
+        .filter((n) => n.size > total - maxTotal)
+        .shift().size;
 };
 
+/*
 const i = `
 $ cd /
 $ ls
@@ -125,7 +144,8 @@ $ ls
 8033020 d.log
 5626152 d.ext
 7214296 k`;
+*/
 
-console.log(solution1(i));
+console.log('part1', solution1(input));
 
-//console.log(solution(input, 14));
+console.log('part2', solution2(input));
