@@ -38,48 +38,12 @@ const follow = (head, tail) => {
     return newTail;
 };
 
-const solution = (input) => {
+const solution = (input, size) => {
     const moves = parse(input);
 
     let tails = new Set();
 
-    let pos = [0, 0];
-    let tail = [0, 0];
-
-    moves.forEach(move => {
-        let [d, n] = move;
-
-        for (var i = 0; i < n; i++) {
-            switch (d) {
-                case 'U':
-                    pos[1]++;
-                    break;
-                case 'R':
-                    pos[0]++;
-                    break;
-                case 'L':
-                    pos[0]--;
-                    break;
-                case 'D':
-                    pos[1]--;
-                    break;
-            }
-
-            tail = follow(pos, tail);
-
-            tails.add(`${tail[0]}:${tail[1]}`);
-        }
-    });
-
-    return tails.size;
-};
-
-const solution2 = (input) => {
-    const moves = parse(input);
-
-    let tails = new Set();
-
-    let knots = Array(10).fill(0).map(_ => [0, 0]);
+    let knots = Array(size).fill(0).map(_ => [0, 0]);
 
     moves.forEach(move => {
         let [d, n] = move;
@@ -128,6 +92,6 @@ L 5
 R 2
 `;
 
-console.log('part1', solution(input));
+console.log('part1', solution(input, 2));
 
-console.log('part2', solution2(input));
+console.log('part2', solution(input, 10));
